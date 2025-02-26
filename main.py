@@ -10,12 +10,13 @@ WHATSAPP_LINK = os.getenv("WHATSAPP_LINK")
 # 🎲 Prediction Logic
 def get_signal(time_frame, period):
     signal_color = random.choice(["GREEN", "RED"])
+    signal_size = random.choice(["BIG", "SMALL"])
     win_rate = random.randint(75, 95)
     
     return f"""🎯 **PREMIUM SIGNAL**  
 ━━━━━━━━━━━━━━  
-📊 **SIGNAL:** {signal_color}  
-⏱ **TIME:** {time_frame}  
+📊 **SIGNAL:** {signal_color} / {signal_size}  
+⏳ **TIME:** {time_frame}  
 🔢 **PERIOD:** {period}  
 📈 **WIN RATE:** {win_rate}%"""
 
@@ -79,8 +80,13 @@ async def receive_period(update: Update, context: CallbackContext):
 
     # Generate Signal
     signal = get_signal(time_frame, period)
-    
-    await update.message.reply_text(signal)
+
+    keyboard = [
+        [InlineKeyboardButton("NEXT 30 SEC", callback_data="wingo_30s")]
+    ]
+    reply_markup = InlineKeyboardMarkup(keyboard)
+
+    await update.message.reply_text(signal, reply_markup=reply_markup)
 
 # 🔥 Main Function
 def main():
